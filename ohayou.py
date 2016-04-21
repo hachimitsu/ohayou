@@ -13,7 +13,7 @@ from time import sleep
 context=hexchat.find_context(server="Rizon", channel="#yukkuri")
 context.set()
 
-#Helper Functions
+# Helper Functions
 
 def say(message):
 	hexchat.command("msg #yukkuri " + message)
@@ -24,9 +24,16 @@ def prnt(message):
 def get_current_nick():
 	return hexchat.get_info("nick")
 
+def adopt():
+	say(".adopt")
+
 # Daily Ohayou Timer
 
 t = 0
+
+def daily_ohayou():
+	say(".ohayou")
+	start_timer()
 
 def start_timer():
 	x=datetime.today()
@@ -36,10 +43,6 @@ def start_timer():
 	global t
 	t = Timer(secs, daily_ohayou)
 	t.start()
-
-def daily_ohayou():
-	say(".ohayou")
-	start_timer()
 
 def stop_ohayou(word, word_eol, userdata):
 	t.cancel()
@@ -66,11 +69,13 @@ def whatabot_parser(word, word_eol, userdata):
 			if ohayous >= 10:
 				say(".buy cat")
 		elif word[1].find(".adopt") > -1:
-			sleep(randint(0,9))
-			say(".adopt")
+			a = Timer(randint(1,9), adopt)
+			a.start()
 	return hexchat.EAT_NONE
 
 hexchat.hook_print("Channel Message", whatabot_parser)
 hexchat.hook_print("Channel Msg Hilight", whatabot_parser)
 hexchat.hook_command("STOPOHAYOU", stop_ohayou)
 hexchat.hook_command("STARTOHAYOU", start_ohayou)
+
+prnt("Ohayou loaded")
