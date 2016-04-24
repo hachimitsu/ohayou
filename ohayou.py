@@ -5,7 +5,6 @@ __module_description__ = "Automated ohayou script"
 import hexchat
 from datetime import datetime
 from threading import Timer
-from random import randint
 from time import sleep
 
 # Set context to #yukkuri on Rizon
@@ -15,7 +14,8 @@ context.set()
 
 # Helper Functions
 
-def say(message):
+def say(message, time=0):
+	sleep(time)
 	hexchat.command("msg #yukkuri " + message)
 
 def prnt(message):
@@ -23,9 +23,6 @@ def prnt(message):
 
 def get_current_nick():
 	return hexchat.get_info("nick")
-
-def adopt():
-	say(".adopt")
 
 # Daily Ohayou Timer
 
@@ -42,6 +39,7 @@ def start_timer():
 	secs=delta_t.seconds+1
 	global t
 	t = Timer(secs, daily_ohayou)
+
 	t.start()
 
 def stop_ohayou(word, word_eol, userdata):
@@ -54,8 +52,6 @@ def start_ohayou(word, word_eol, userdata):
 	prnt("ohayou timer started")
 	return hexchat.EAT_NONE
 
-start_timer()
-
 # Hooks and Callbacks
 
 def whatabot_parser(word, word_eol, userdata):
@@ -66,11 +62,27 @@ def whatabot_parser(word, word_eol, userdata):
 
 		if word[1].find(nick) > -1 and ohayous.isdigit():
 			ohayous = int(ohayous)
-			if ohayous >= 10:
-				say(".buy cat")
-		elif word[1].find(".adopt") > -1:
-			a = Timer(randint(1,9), adopt)
-			a.start()
+
+			while ohayous >= 10:
+				if ohayous >= 650:
+					say(".buy dragondildo", 1)
+					ohayous -= 650
+				elif ohayous >= 500:
+					say(".buy catnip", 1)
+					ohayous -= 500
+				elif ohayous >= 300:
+					say(".buy godzilla", 1)
+					ohayous -= 300
+				elif ohayous >= 100:
+					say(".buy bag", 1)
+					ohayous -= 100
+				elif ohayous >= 45:
+					say(".buy waifufig", 1)
+					ohayous -= 45
+				else:
+					say(".buy cat", 1)
+					ohayous -= 10
+
 	return hexchat.EAT_NONE
 
 hexchat.hook_print("Channel Message", whatabot_parser)
@@ -78,4 +90,5 @@ hexchat.hook_print("Channel Msg Hilight", whatabot_parser)
 hexchat.hook_command("STOPOHAYOU", stop_ohayou)
 hexchat.hook_command("STARTOHAYOU", start_ohayou)
 
+start_timer()
 prnt("Ohayou loaded")
