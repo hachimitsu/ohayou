@@ -1,4 +1,5 @@
 __module_name__ = "ohayou"
+__module_author__ = "hachi"
 __module_version__ = "1.0"
 __module_description__ = "Automated ohayou script"
 
@@ -9,8 +10,7 @@ from time import sleep
 
 # Set context to #yukkuri on Rizon
 
-context=hexchat.find_context(server="Rizon", channel="#yukkuri")
-context.set()
+context = 0
 
 # Helper Functions
 
@@ -29,6 +29,10 @@ def get_current_nick():
 t = 0
 
 def daily_ohayou():
+	global context
+	if context == 0:
+		context=hexchat.find_context(server="Rizon", channel="#yukkuri")
+		context.set()
 	say(".ohayou")
 	start_timer()
 
